@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BackendService } from '../services/backend.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-order-dialog',
@@ -17,7 +19,11 @@ export class OrderDialogComponent {
 
   orderForm !: FormGroup
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private backendService: BackendService,
+    private dialogRef: MatDialogRef<OrderDialogComponent>
+  ) { }
 
   ngOnInit(): void {
     this.orderForm = this.formBuilder.group({
@@ -27,13 +33,24 @@ export class OrderDialogComponent {
       address: ['', Validators.required],
       paymentType: ['', Validators.required],
       price: ['', Validators.required],
-      trackingStatus: ['', Validators.required],
+      trackingStatus: ['', Validators.required]
     })
   }
 
   createOrder() {
-    //creating order
-    console.log(this.orderForm.value)
+    if (this.orderForm.valid) {
+      this.backendService.postOrder(this.orderForm.value)
+        .subscribe({
+          next: () => {
+            alert('Order added successfully')
+            this.orderForm.reset()
+            this.dialogRef.close('save')
+          },
+          error: () => {
+            alert("Error while adding the order")
+          }
+        })
+    }
   }
 
 }
