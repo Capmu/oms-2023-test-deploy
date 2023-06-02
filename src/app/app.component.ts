@@ -21,7 +21,8 @@ export class AppComponent {
     'address',
     'paymentType',
     'price',
-    'trackingStatus'
+    'trackingStatus',
+    'management'
   ];
 
   @ViewChild(MatPaginator) paginator !: MatPaginator;
@@ -56,5 +57,12 @@ export class AppComponent {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  editOrder(row: any) {
+    this.dialog.open(OrderDialogComponent, {
+      width: '30%',
+      data: row
+    })
   }
 }

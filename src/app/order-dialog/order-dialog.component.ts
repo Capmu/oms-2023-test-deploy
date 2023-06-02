@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BackendService } from '../services/backend.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-order-dialog',
@@ -17,9 +17,12 @@ export class OrderDialogComponent {
     'Payment Success'
   ]
 
+  actionButton = 'Save'  //set action button name to 'Save' as a default
+
   orderForm !: FormGroup
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public editData: any,
     private formBuilder: FormBuilder,
     private backendService: BackendService,
     private dialogRef: MatDialogRef<OrderDialogComponent>
@@ -35,10 +38,22 @@ export class OrderDialogComponent {
       price: ['', Validators.required],
       trackingStatus: ['', Validators.required]
     })
+
+    //prefill data, if editing
+    if (this.editData) {
+      this.actionButton = 'Update'  //to change button name when editing
+      this.orderForm.controls['trackingNumber'].setValue(this.editData.trackingNumber)
+      this.orderForm.controls['receiver'].setValue(this.editData.receiver)
+      this.orderForm.controls['pickupDate'].setValue(this.editData.pickupDate)
+      this.orderForm.controls['address'].setValue(this.editData.address)
+      this.orderForm.controls['paymentType'].setValue(this.editData.paymentType)
+      this.orderForm.controls['price'].setValue(this.editData.price)
+      this.orderForm.controls['trackingStatus'].setValue(this.editData.trackingStatus)
+    }
   }
 
-  createOrder() {
-    if (this.orderForm.valid) {
+  createOrUpdateOrder() {
+    if (this.orderForm.valid && this.actionButton === 'Save') {
       this.backendService.postOrder(this.orderForm.value)
         .subscribe({
           next: () => {
@@ -49,6 +64,18 @@ export class OrderDialogComponent {
           error: () => {
             alert("Error while adding the order")
           }
+        })
+    } else {
+      this.backendService.putOrder(this.orderForm.value, this.editData.id)
+        .subscribe({
+          next: () => {
+            alert('Order updated successfully')
+            this.orderForm.reset()
+            this.dialogRef.close('update')
+          },
+          error: () => {
+            alert("Error while updating the order")
+          },
         })
     }
   }
