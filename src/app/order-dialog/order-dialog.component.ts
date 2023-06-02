@@ -13,7 +13,7 @@ export class OrderDialogComponent {
   trackingStatus = [
     'Picked up',
     'On delivery',
-    'Recevied',
+    'Received',
     'Payment Success'
   ]
 
