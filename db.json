@@ -14,9 +14,9 @@
       "trackingNumber": "cc-002",
       "receiver": "Tony Stark",
       "pickupDate": "2023-06-02T17:00:00.000Z",
-      "address": "LA",
+      "address": "Phuket",
       "paymentType": "COD",
-      "price": 10,
+      "price": 100,
       "trackingStatus": "On delivery",
       "id": 2
     }

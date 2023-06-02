@@ -48,7 +48,7 @@ export class AppComponent {
   }
 
   openOrderDialog() {
-    this.dialog.open(OrderDialogComponent, { width: '30%' });
+    this.dialog.open(OrderDialogComponent, { width: '30%' }).afterClosed().subscribe(() => { this.getAllOrders() });
   }
 
   applyFilter(event: Event) {
@@ -63,6 +63,20 @@ export class AppComponent {
     this.dialog.open(OrderDialogComponent, {
       width: '30%',
       data: row
-    })
+    }).afterClosed().subscribe(() => { this.getAllOrders() })
   }
+
+  deleteOrder(id: any) {
+    this.backendService.deleteOrder(id)
+      .subscribe({
+        next: () => {
+          alert('Order deleted successfully')
+          this.getAllOrders()
+        },
+        error: () => {
+          alert('Error while deleting order')
+        }
+      })
+  }
+
 }
