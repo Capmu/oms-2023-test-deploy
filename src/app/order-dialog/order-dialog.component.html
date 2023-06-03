@@ -29,10 +29,15 @@
       <input formControlName="address" matInput placeholder="Bangkok 10150" />
     </mat-form-field>
 
-    <mat-radio-group formControlName="paymentType" class="example-radio-group">
-      <mat-radio-button value="Transfer">Transfer</mat-radio-button>
-      <mat-radio-button value="COD">COD</mat-radio-button>
-    </mat-radio-group>
+    <!-- <mat-radio-group formControlName="paymentType" class="example-radio-group">
+      <mat-radio-button *ngFor="let type of paymentTypes" [value]="type">{{ type }}</mat-radio-button>
+    </mat-radio-group> -->
+
+    <mat-chip-listbox aria-label="Fish selection" formControlName="paymentType">
+      <mat-chip-option *ngFor="let type of paymentTypes" [value]="type">{{ type }}</mat-chip-option>
+    </mat-chip-listbox>
+
+    <div style="margin-bottom: 20px;"></div>
 
     <mat-form-field appearance="outline">
       <mat-label>Price</mat-label>

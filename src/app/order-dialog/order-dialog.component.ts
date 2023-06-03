@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BackendService } from '../services/backend.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-order-dialog',
@@ -10,12 +11,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class OrderDialogComponent {
 
-  trackingStatus = [
+  trackingStatus: string[] = [
     'Picked up',
     'On delivery',
     'Received',
     'Payment Success'
   ]
+
+  paymentTypes: string[] = ['Transfer', 'COD'];
 
   actionButton = 'Save'  //set action button name to 'Save' as a default
 
@@ -25,7 +28,8 @@ export class OrderDialogComponent {
     @Inject(MAT_DIALOG_DATA) public editData: any,
     private formBuilder: FormBuilder,
     private backendService: BackendService,
-    private dialogRef: MatDialogRef<OrderDialogComponent>
+    private dialogRef: MatDialogRef<OrderDialogComponent>,
+    private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -69,7 +73,8 @@ export class OrderDialogComponent {
       this.backendService.putOrder(this.orderForm.value, this.editData.id)
         .subscribe({
           next: () => {
-            alert('Order updated successfully')
+            // alert('Order updated successfully')
+            this._snackBar.open('Order updated successfully', 'okiee');
             this.orderForm.reset()
             this.dialogRef.close('update')
           },
